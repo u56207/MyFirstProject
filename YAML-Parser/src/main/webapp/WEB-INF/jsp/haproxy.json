@@ -1,0 +1,153 @@
+{
+  "global": {
+    "config_version": 2
+  },
+  "grok": {
+    "patterns_dir": "./patterns"
+  },
+  "input": {
+    "type": "file",
+    "path": "/var/prod/logs/tibco/haproxy/http_hap.log",
+    "readall": false
+  },
+  "metrics": [
+    {
+      "type": "counter",
+      "name": "http_backend_invocations",
+      "help": "Haproxy Backend Invocations.",
+      "match": "%{HAPROXYHTTP}",
+      "labels": {
+        "backend": "{{.backend_name}}",
+        "instance": "{{.server_name}}",
+        "server": "{{.syslog_server}}",
+        "job": "TCEHAPS"
+      }
+    },
+    {
+      "type": "counter",
+      "name": "http_backend_status",
+      "help": "Haproxy Response Status Code.",
+      "match": "%{HAPROXYHTTP}",
+      "labels": {
+        "backend": "{{.backend_name}}",
+        "instance": "{{.server_name}}",
+        "server": "{{.syslog_server}}",
+        "job": "TCEHAPS",
+        "status": "{{.http_status_code}}"
+      }
+    },
+    {
+      "type": "gauge",
+      "name": "http_client_request",
+      "help": "Haproxy Time spent waiting for a full HTTP request from the client.",
+      "match": "%{HAPROXYHTTP}",
+      "value": "{{.time_request}}",
+      "labels": {
+        "backend": "{{.backend_name}}",
+        "instance": "{{.server_name}}",
+        "server": "{{.syslog_server}}",
+        "job": "TCEHAPS"
+      }
+    },
+    {
+      "type": "gauge",
+      "name": "http_backend_response",
+      "help": "Haproxy total time in milliseconds spent waiting for the server to send a full HTTP response.",
+      "match": "%{HAPROXYHTTP}",
+      "value": "{{.time_backend_response}}",
+      "labels": {
+        "backend": "{{.backend_name}}",
+        "instance": "{{.server_name}}",
+        "server": "{{.syslog_server}}",
+        "job": "TCEHAPS"
+      }
+    },
+    {
+      "type": "gauge",
+      "name": "http_actconn",
+      "help": "Haproxy total number of concurrent connections on the process.",
+      "match": "%{HAPROXYHTTP}",
+      "value": "{{.actconn}}",
+      "labels": {
+        "server": "{{.syslog_server}}",
+        "job": "TCEHAPS"
+      }
+    },
+    {
+      "type": "gauge",
+      "name": "http_feconn",
+      "help": "Haproxy total number of concurrent connections on the froentend.",
+      "match": "%{HAPROXYHTTP}",
+      "value": "{{.feconn}}",
+      "labels": {
+        "server": "{{.syslog_server}}",
+        "job": "TCEHAPS"
+      }
+    },
+    {
+      "type": "gauge",
+      "name": "http_beconn",
+      "help": "Haproxy total number of concurrent connections on the backend.",
+      "match": "%{HAPROXYHTTP}",
+      "value": "{{.beconn}}",
+      "labels": {
+        "backend": "{{.backend_name}}",
+        "instance": "{{.server_name}}",
+        "server": "{{.syslog_server}}",
+        "job": "TCEHAPS"
+      }
+    },
+    {
+      "type": "gauge",
+      "name": "http_srvconn",
+      "help": "Haproxy total number of concurrent connections on the server.",
+      "match": "%{HAPROXYHTTP}",
+      "value": "{{.srvconn}}",
+      "labels": {
+        "server": "{{.syslog_server}}",
+        "job": "TCEHAPS"
+      }
+    },
+    {
+      "type": "gauge",
+      "name": "http_srvqueue",
+      "help": "Haproxy total number of requests which were processed before this one in the server queue.",
+      "match": "%{HAPROXYHTTP}",
+      "value": "{{.srv_queue}}",
+      "labels": {
+        "server": "{{.syslog_server}}",
+        "job": "TCEHAPS"
+      }
+    },
+    {
+      "type": "gauge",
+      "name": "http_backendQueue",
+      "help": "Haproxy total number of requests which were processed before this one in the backend queue.",
+      "match": "%{HAPROXYHTTP}",
+      "value": "{{.backend_queue}}",
+      "labels": {
+        "backend": "{{.backend_name}}",
+        "instance": "{{.server_name}}",
+        "server": "{{.syslog_server}}",
+        "job": "TCEHAPS"
+      }
+    },
+    {
+      "type": "summary",
+      "name": "http_backend_latency",
+      "help": "Haproxy Latency stats.",
+      "match": "%{HAPROXYHTTP}",
+      "value": "{{.time_duration}}",
+      "labels": {
+        "backend": "{{.backend_name}}",
+        "instance": "{{.server_name}}",
+        "server": "{{.syslog_server}}",
+        "job": "TCEHAPS"
+      }
+    }
+  ],
+  "server": {
+    "host": "0.0.0.0",
+    "port": 9142
+  }
+}
